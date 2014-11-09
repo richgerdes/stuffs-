@@ -1,0 +1,18 @@
+<list> A
+directory/test.txt,1  directory/test1.txt,1  
+</list>
+<list> Baa
+directory/test1.txt,1  
+</list>
+<list> Boo
+directory/test.txt,1  
+</list>
+<list> cat
+directory/test1.txt,1  
+</list>
+<list> dog
+directory/test.txt,1  
+</list>
+<list> name
+directory/test.txt,2  directory/test1.txt,1  
+</list>
