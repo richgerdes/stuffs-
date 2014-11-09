@@ -4,25 +4,78 @@
 #include "fileops.h"
 #include "indexer.h"
 
-void* clone(void* list){
-	return NULL;
+Node* clone(Node* head){
+	Node new = (Node*) malloc(sizeof(Node));
+	new->fileName = (char*) malloc((strlen(head->fileName) + 1) * sizeof(char));
+	memset(new->fileName, 0, strlen(head->fileName) + 1);
+	memcpy(new->fileName, head->fileName, strlen(head->fileName));
+	new->occurences = head->occurences
+	new->next = clone(head->next);
+	return new;
 }
 
-void* intersectLists(void* destHead, void* srcHead){
+Node* cloneNode(Node){
+	Node new = (Node*) malloc(sizeof(Node));
+	new->fileName = (char*) malloc((strlen(head->fileName) + 1) * sizeof(char));
+	memset(new->fileName, 0, strlen(head->fileName) + 1);
+	memcpy(new->fileName, head->fileName, strlen(head->fileName));
+	new->occurences = head->occurences
+	new->next = NULL;
+	return new;
+}
+
+Node* intersectLists(Node* destHead, Node* srcHead){
 	if(destHead == NULL)
 		return clone(srcHead);
 	if(srcHead == NULL)
 		return clone(destHead);
 	
-	/*
-	for each item in destHead
-		if item in srcHead
-			next
-		else
-			remove it
-	*/
+	Node* newHead = NULL;
+	Node* curr = destHead;
+	Node* scurr = srcHead;
+	Node* prev = NULL;
+	
+	while(scurr != NULL){
+		if(strcmp(curr->fileName, scurr->fileName) == 0){
+			if(newHead == NULL){
+				newHead = cloneNode(curr);
+			}else{
+				if(strcmp(curr->fileName,newHead->fileName) == 0){
+					
+				}
+			}
+		}
+	}
+	
+	if(scurr == NULL){
+		Node* tmp = destHead;
+		rNodeFree(tmp);
+		destHead = curr;
+		
+	}
+	
+	prev = curr;
+	curr = curr->next;
+	
+	while(curr != NULL){
+		
+		scurr = srcHead;
+		
+		while(scurr != NULL){
+			
+		}
+		
+		if(scurr == NULL){
+			if(destHead == curr){
+				Node* tmp = destHead;
+				rNodeFree(tmp);
+				destHead = curr;
+			}
+		}
+		
+	}
 
-	return NULL;
+	return newHead;
 }
 
 void* unionLists(void* destHead, void* srcHead){
