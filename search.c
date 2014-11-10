@@ -10,7 +10,7 @@ Node* clone(Node* head){
 	return new;
 }
 
-Node* cloneNode(Node){
+Node* cloneNode(Node* node){
 	Node new = (Node*) malloc(sizeof(Node));
 	new->fileName = (char*) malloc((strlen(head->fileName) + 1) * sizeof(char));
 	memset(new->fileName, 0, strlen(head->fileName) + 1);
@@ -45,6 +45,8 @@ Node* intersectLists(Node* destHead, Node* srcHead){
 				}
 			}
 		}
+		
+		curr = curr->next;
 	}
 	
 	prev = curr;
@@ -67,66 +69,60 @@ Node* intersectLists(Node* destHead, Node* srcHead){
 				}
 			}
 		}
+		
+		curr = curr->next;
 	}
 
 	return newHead;
 }
 
-void* unionLists(void* destHead, void* srcHead){
+Node* unionLists(Node* destHead, Node* srcHead){
 	if(destHead == NULL)
 		return clone(srcHead);
 	if(srcHead == NULL)
 		return clone(destHead);
 	
-	Node* newHead = NULL;
-	Node* curr = destHead;
+	Node* newHead = clone(destHead);
 	Node* scurr = srcHead;
 	Node* prev = NULL;
 	
 	while(scurr != NULL){
-		if(strcmp(curr->fileName, scurr->fileName) == 0){
-			if(newHead == NULL){
-				newHead = cloneNode(curr);
-			}else{
-				Node* nprev = newHead;
-				Node* ncurr = newHead->next;
-				while(ncurr != NULL){
-					if(curr->occurences > ncurr->occurences){
-						nprev->next = cloneNode(curr);
-					}
+		Node* curr = newHead;
+		while(curr != NULL){
+			if(strcmp(curr->fileName, scurr->fileName) != 0){
+				Node* n = cloneNode(curr);
+				Node* ncurr = newHead;
+				if(strcmp(scurr->fileName,ncurr->fileName) < 0){
+					n->next = ncurr;
+					ncurr = n;
+					newHead = n;
+					break;
 				}
+				Node* nprev = ncurr;
+				ncurr = ncurr->next;
+				while(ncurr != NULL){
+					if(strcmp(scurr->fileName,ncurr->fileName) < 0){
+						nprev->next = n;
+						n->next = ncurr;
+						break;
+					}
+					
+					nprev = ncurr;
+					ncurr = ncurr->next;
+				}
+				
+				if(ncurr == NULL){
+					nprev->next = n;
+				}
+				break;
 			}
 		}
 	}
 	
-	prev = curr;
-	curr = curr->next;
-	
-	while(curr != NULL){
-		
-		scurr = srcHead;
-		
-		if(strcmp(curr->fileName, scurr->fileName) == 0){
-			if(newHead == NULL){
-				newHead = cloneNode(curr);
-			}else{
-				Node* nprev = newHead;
-				Node* ncurr = newHead->next;
-				while(ncurr != NULL){
-					if(curr->occurences > ncurr->occurences){
-						nprev->next = cloneNode(curr);
-					}
-				}
-			}
-		}
-		
-		curr = curr->next
-	}
-
 	return newHead;
 }
 
-void *getFiles(Indexer indexer, char* word){
+Node *getFiles(hashTable* table, char* word){
 	
 	//go through list
 	// if if item is word return sub list
@@ -137,14 +133,14 @@ void *getFiles(Indexer indexer, char* word){
 	
 }
 
-void search(Indexer indexer, int type, int count, char* words[]){
+void search(hashTable* table, int type, int count, char* words[]){
 	if(indexer == NULL)
 		return;
 	if(words == NULL)
 		return;
 	if(type < 0)
 		return;
-		
+	
 	/*
 	resultFiles = null
 	
@@ -233,9 +229,7 @@ int main(int argc, char* argv[]){
 		//for each file in files
 		//	print (file);
 	
-	
 		break; //remove this line!
-		
 	}
 	
 	
