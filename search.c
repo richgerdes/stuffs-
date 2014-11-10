@@ -82,53 +82,43 @@ Node* unionLists(Node* destHead, Node* srcHead){
 	if(srcHead == NULL)
 		return clone(destHead);
 	
-	Node* newHead = NULL;
-	Node* curr = destHead;
+	Node* newHead = clone(destHead);
 	Node* scurr = srcHead;
 	Node* prev = NULL;
 	
 	while(scurr != NULL){
-		if(strcmp(curr->fileName, scurr->fileName) == 0){
-			if(newHead == NULL){
-				newHead = cloneNode(curr);
-			}else{
-				Node* nprev = newHead;
-				Node* ncurr = newHead->next;
-				while(ncurr != NULL){
-					if(curr->occurences > ncurr->occurences){
-						nprev->next = cloneNode(curr);
-					}
+		Node* curr = newHead;
+		while(curr != NULL){
+			if(strcmp(curr->fileName, scurr->fileName) != 0){
+				Node* n = cloneNode(curr);
+				Node* ncurr = newHead;
+				if(strcmp(scurr->fileName,ncurr->fileName) < 0){
+					n->next = ncurr;
+					ncurr = n;
+					newHead = n;
+					break;
 				}
+				Node* nprev = ncurr;
+				ncurr = ncurr->next;
+				while(ncurr != NULL){
+					if(strcmp(scurr->fileName,ncurr->fileName) < 0){
+						nprev->next = n;
+						n->next = ncurr;
+						break;
+					}
+					
+					nprev = ncurr;
+					ncurr = ncurr->next;
+				}
+				
+				if(ncurr == NULL){
+					nprev->next = n;
+				}
+				break;
 			}
-		
-			scurr = scurr->next;
 		}
 	}
 	
-	prev = curr;
-	curr = curr->next;
-	
-	while(curr != NULL){
-		
-		scurr = srcHead;
-		
-		if(strcmp(curr->fileName, scurr->fileName) == 0){
-			if(newHead == NULL){
-				newHead = cloneNode(curr);
-			}else{
-				Node* nprev = newHead;
-				Node* ncurr = newHead->next;
-				while(ncurr != NULL){
-					if(curr->occurences > ncurr->occurences){
-						nprev->next = cloneNode(curr);
-					}
-				}
-			}
-		}
-		
-		curr = curr->next;
-	}
-
 	return newHead;
 }
 
@@ -150,7 +140,7 @@ void search(hashTable* table, int type, int count, char* words[]){
 		return;
 	if(type < 0)
 		return;
-		
+	
 	/*
 	resultFiles = null
 	
