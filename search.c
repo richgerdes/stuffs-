@@ -10,7 +10,7 @@ Node* clone(Node* head){
 	return new;
 }
 
-Node* cloneNode(Node){
+Node* cloneNode(Node* node){
 	Node new = (Node*) malloc(sizeof(Node));
 	new->fileName = (char*) malloc((strlen(head->fileName) + 1) * sizeof(char));
 	memset(new->fileName, 0, strlen(head->fileName) + 1);
@@ -45,6 +45,8 @@ Node* intersectLists(Node* destHead, Node* srcHead){
 				}
 			}
 		}
+		
+		curr = curr->next;
 	}
 	
 	prev = curr;
@@ -67,12 +69,14 @@ Node* intersectLists(Node* destHead, Node* srcHead){
 				}
 			}
 		}
+		
+		curr = curr->next;
 	}
 
 	return newHead;
 }
 
-void* unionLists(void* destHead, void* srcHead){
+Node* unionLists(Node* destHead, Node* srcHead){
 	if(destHead == NULL)
 		return clone(srcHead);
 	if(srcHead == NULL)
@@ -96,6 +100,8 @@ void* unionLists(void* destHead, void* srcHead){
 					}
 				}
 			}
+		
+			scurr = scurr->next;
 		}
 	}
 	
@@ -120,13 +126,13 @@ void* unionLists(void* destHead, void* srcHead){
 			}
 		}
 		
-		curr = curr->next
+		curr = curr->next;
 	}
 
 	return newHead;
 }
 
-void *getFiles(Indexer indexer, char* word){
+Node *getFiles(hashTable* table, char* word){
 	
 	//go through list
 	// if if item is word return sub list
@@ -137,7 +143,7 @@ void *getFiles(Indexer indexer, char* word){
 	
 }
 
-void search(Indexer indexer, int type, int count, char* words[]){
+void search(hashTable* table, int type, int count, char* words[]){
 	if(indexer == NULL)
 		return;
 	if(words == NULL)
@@ -232,9 +238,7 @@ int main(int argc, char* argv[]){
 		//for each file in files
 		//	print (file);
 	
-	
 		break; //remove this line!
-		
 	}
 	
 	
