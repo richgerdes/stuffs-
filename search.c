@@ -129,9 +129,69 @@ void search(Indexer indexer, int type, int count, char* words[]){
 	return resultFiles
 	*/
 }
+char* readWord( FILE *fp){
+	
+	char* string = (char*)malloc(sizeof(char) *200);
+	int i = 0;
+	char a;
+	
+	a = fgetc(fp);
+	
+	while(a != EOF){
+		if(a != ' ' && a != '\n'){											
+			while(a != EOF && a != ' ' && a != '\n'){	
+				string[i] = a;
+				i++;
+				a = fgetc(fp);
+			}
+				string[i]= '\0';	
+				return string;
+			}else{
+				a = fgetc(fp);									
+			}
+	}	
+	return NULL;
+}
 
 int main(int argc, char* argv[]){
 	//load file -> indexer
+	
+	FILE *fp;
+	char* result;
+	hashTable* table = CTable();
+	
+	if(argc != 2 ){
+		printf("error need to enter a file\n");
+		return 0;
+	}
+	if(strcmp(argv[0], "-h") == 0 || strcmp(argv[1], "-h") == 0){	
+		printf("Help with file\n");	
+		return 0;
+	}
+	fp = fopen(argv[1], "r");								
+	if( fp == NULL){
+		printf("The file is empty, please enter a file with information\n");
+		return 0;
+	}
+	while(1){
+		result = readWord(fp);
+		if(result == NULL){
+			break;
+		}
+		if(strcmp( result, "<list>") == 0){
+			char* word = readWord(fp);
+			while(1){
+				char* fileName = readWord(fp);
+				if(fileName == NULL){
+					break;
+				}
+				if(strcmp( fileName, "</list>") == 0){
+					break;
+				}
+				insertIndex(table, word, fileName);
+			}
+		}
+	}
 	
 	while(1){
 		//input->string
