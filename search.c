@@ -5,12 +5,16 @@
 #include "indexer.h"
 
 Node* clone(Node* head){
+	if(head == NULL)
+		return NULL;
 	Node new = cloneNode(head);
 	new->next = clone(head->next);
 	return new;
 }
 
 Node* cloneNode(Node* node){
+	if(node == NULL)
+		return NULL;
 	Node new = (Node*) malloc(sizeof(Node));
 	new->fileName = (char*) malloc((strlen(head->fileName) + 1) * sizeof(char));
 	memset(new->fileName, 0, strlen(head->fileName) + 1);
@@ -124,10 +128,17 @@ Node* unionLists(Node* destHead, Node* srcHead){
 
 Node *getFiles(hashTable* table, char* word){
 	
-	//go through list
-	// if if item is word return sub list
+	char* key = tolower(word);
+	int i = hash(table, key);
 	
-	//If not found return null
+	Bucket* bucket = table->buckets[i];
+	
+	while(bucket != NULL){
+		if(strcmp(bucket->key,key)==0){
+			return bucket->value;
+		}
+		bucket = bucket->next;
+	}
 	
 	return NULL;
 	
@@ -140,21 +151,30 @@ void search(hashTable* table, int type, int count, char* words[]){
 		return;
 	if(type < 0)
 		return;
+	int SEARCH_AND = 0;
+	int SEARCH_OR = 1;
+	Node* resultFiles = NULL;
 	
-	/*
-	resultFiles = null
+	if(type == SEARCH_AND){
+		int i = 0;
+		while(i < count){
+			Node* files = getfiles(indexer, words[i])
+			Node* ret = intersect(resultFiles, files);
+			DNode(resultFiles);
+			resultFiles = ret;
+		}
+	}else if(type == SEARCH_OR){
+		int i = 0;
+		while(i < count){
+			Node* files = getfiles(indexer, words[i])
+			Node* ret = unionLists(resultFiles, files);
+			DNode(resultFiles);
+			resultFiles = ret;
+		}
+	}
 	
-	if type == and then
-		for each word in words
-			getfiles(indexer, word) -> files
-			intersect(resultFiles, files);
-	else if type == or then
-		for each word in words
-			getfiles(indexer, word) -> files
-			union(resultFiles, files);
+	return resultFiles;
 	
-	return resultFiles
-	*/
 }
 char* readWord( FILE *fp){
 	
@@ -181,7 +201,6 @@ char* readWord( FILE *fp){
 }
 
 int main(int argc, char* argv[]){
-	//load file -> indexer
 	
 	FILE *fp;
 	char* result;
