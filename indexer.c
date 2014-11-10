@@ -68,15 +68,15 @@ int isReg(char *path){
 		/* This goes into the folder*/
 		
 		DIR *dp;
-		struct dirent *dir;
-		struct stat s;
-		char path[sizeof(name) + 1];
+		//struct dirent *dir;
+		//struct stat s;
+		//char path[sizeof(name) + 1];
 		dp = opendir(name);
-/*		
+	
 		if(dp){
 			while(1){
-				 struct dirent *dir;
-     	         char *path;
+				struct dirent *dir;
+     	        char *path;
 				char dirname[4096];
 				dir = readdir(dp);
 				
@@ -102,22 +102,17 @@ int isReg(char *path){
 							strcpy(dirname, name);
 							strcat(dirname, "/");
 							strcat(dirname, path);
-							processDir(dirname, table);
+							processDir(table, dirname);
 						}
 					}
 				} 
-
-
 			}
-
-
-
 		}else{
 				printf("error");
-			}	
+		}	
 
-	*/
-strcpy(path, name);
+
+ /* strcpy(path, name);
 		strcat(path, "/");
 		
 		dp = opendir(path);
@@ -142,7 +137,7 @@ strcpy(path, name);
 				}		
 			} 
 		}
-
+	*/
  }
  
 int main( int argc, char **argv){

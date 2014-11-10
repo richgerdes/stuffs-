@@ -80,6 +80,21 @@ void deletetable( hashTable *table){
 		table->buckets = NULL;
 		free(table);
 }
+char* toLower(char *string){											 
+		char *copy = malloc(sizeof(string));							
+		int i = 0;
+		while(string[i] != '\0'){	
+				if(isalpha(string[i])){
+					copy[i] = tolower(string[i]);
+					i++;
+				}else{
+					copy[i] = string[i];
+					i++;
+				}
+		}
+		copy[i] = '\0';
+		return copy;													
+}
 int hash( hashTable *table, char *key){
 		/* This method is getting the key to hash*/
 
@@ -94,7 +109,40 @@ int hash( hashTable *table, char *key){
 		return index;
 
 }
+void sortList(Bucket *bucket){
+	
+	Node *ptr;
+	Node *prev = NULL;
+	
+	ptr = bucket->value;
+	
+	if(ptr->next == NULL){
+		return;
+	}else if( ptr->occurences < ptr->next->occurences){
+		Node *temp = ptr->next;
+		ptr->next = temp->next;
+		temp->next = ptr;
+		bucket->value = temp;
+		ptr = temp;
+	}
+	prev = ptr;
+	ptr = ptr->next;
+	
+	while(ptr != NULL){
+		if(ptr->next == NULL){
+			break;
+		}else if(ptr->occurences < ptr->next->occurences){
+			Node* temp = ptr->next;
+			ptr->next = temp->next;
+			temp->next = ptr;
+			prev->next = temp;
+			sortList(bucket);
+			return;
+		}
+	
+	}
 
+}
 void insertBucket( Bucket *bucket, char *fileName){
 
 		/* The insert method is trying to add the data in the hashtable array which is called buckets */
@@ -105,6 +153,7 @@ void insertBucket( Bucket *bucket, char *fileName){
 		for(ptr = bucket->value; ptr != NULL; ptr = ptr->next){
 				if(strcmp(ptr->fileName, fileName) == 0){
 						ptr->occurences++;
+						sortList(bucket);
 						return;
 				}
 				prev = ptr;
@@ -130,12 +179,14 @@ void insert( hashTable *table, char* key, char *data){
 		int index = hash(table, key);
 		Bucket *ptr;
 		Bucket *prev = NULL;
+		key = toLower(key);
 
 		for( ptr = table->buckets[index]; ptr != NULL; ptr = ptr->next){
 				if(strcmp(key, ptr->key) == 0){
 						insertBucket(ptr, data);
 						return;
 				}else if(strcmp(key, ptr->key) <= 0){
+						printf("The key %s , key at curr %s\n", key, ptr->key);
 						Bucket* new = (Bucket*) malloc(sizeof(Bucket));
 						new->next = ptr;
 						if(prev != NULL)
@@ -144,6 +195,7 @@ void insert( hashTable *table, char* key, char *data){
 							table->buckets[index] = new;
 						insertBucket(new, data);
 						new->key = (char*)malloc((strlen(key) + 1) * sizeof(char));
+						key = toLower(key);
 						strcpy(new->key, key);
 						return;
 				}
@@ -160,8 +212,8 @@ void insert( hashTable *table, char* key, char *data){
 		}
 		insertBucket(ptr, data);
 		ptr->key = (char*)malloc((strlen(key) + 1) * sizeof(char));
+		key = toLower(key);
 		strcpy(ptr->key, key);
 		ptr->next = NULL;
 
 }
-

@@ -34,7 +34,9 @@ struct hashTable {
 hashTable *CTable();
 void printTable( hashTable *table, FILE *fp);
 void deletetable( hashTable *table);
+char* toLower(char *string);
 int hash( hashTable *table, char *key);
+void sortList(Bucket *bucket);
 void insertBucket( Bucket *bucket, char *filename);
 void insert( hashTable *table, char* key, char *data);
 
