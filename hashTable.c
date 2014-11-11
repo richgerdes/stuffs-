@@ -140,12 +140,13 @@ void sortList(Bucket *bucket){
 
 }
 void insertBucket( Bucket *bucket, char *fileName){
-
+		if(bucket == NULL)
+			return;
 		/* The insert method is trying to add the data in the hashtable array which is called buckets */
 
 		Node *ptr;
 		Node *prev = NULL;
-
+		
 		for(ptr = bucket->value; ptr != NULL; ptr = ptr->next){
 				if(strcmp(ptr->fileName, fileName) == 0){
 						ptr->occurences++;
@@ -162,7 +163,9 @@ void insertBucket( Bucket *bucket, char *fileName){
 				ptr = bucket->value;
 		}
 		ptr->fileName = (char*)malloc((strlen(fileName) + 1) * sizeof(char));
-		strcpy(ptr->fileName, fileName);
+		memset(ptr->fileName, '\0', (strlen(fileName) + 1) * sizeof(char));
+		memcpy(ptr->fileName, fileName, strlen(fileName) + 1);
+		//strcpy(ptr->fileName, fileName);
 		ptr->occurences = 1;
 		ptr->next = NULL;
 }
@@ -206,6 +209,7 @@ void insert( hashTable *table, char* key, char *data){
 				table->buckets[index] = (Bucket*)malloc(sizeof(Bucket));
 				ptr = table->buckets[index];
 		}
+		ptr->value = NULL;
 		insertBucket(ptr, data);
 		ptr->key = (char*)malloc((strlen(key) + 1) * sizeof(char));
 		key = toLower(key);

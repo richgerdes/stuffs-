@@ -1,26 +1,25 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
-#include "fileops.h"
-#include "indexer.h"
-
-Node* clone(Node* head){
-	if(head == NULL)
-		return NULL;
-	Node new = cloneNode(head);
-	new->next = clone(head->next);
-	return new;
-}
+#include "hashTable.h"
 
 Node* cloneNode(Node* node){
 	if(node == NULL)
 		return NULL;
-	Node new = (Node*) malloc(sizeof(Node));
-	new->fileName = (char*) malloc((strlen(head->fileName) + 1) * sizeof(char));
-	memset(new->fileName, 0, strlen(head->fileName) + 1);
-	memcpy(new->fileName, head->fileName, strlen(head->fileName));
-	new->occurences = head->occurences
+	Node* new = (Node*) malloc(sizeof(Node));
+	new->fileName = (char*) malloc((strlen(node->fileName) + 1) * sizeof(char));
+	memset(new->fileName, 0, strlen(node->fileName) + 1);
+	memcpy(new->fileName, node->fileName, strlen(node->fileName));
+	new->occurences = node->occurences;
 	new->next = NULL;
+	return new;
+}
+
+Node* clone(Node* head){
+	if(head == NULL)
+		return NULL;
+	Node* new = cloneNode(head);
+	new->next = clone(head->next);
 	return new;
 }
 
@@ -50,7 +49,7 @@ Node* intersectLists(Node* destHead, Node* srcHead){
 			}
 		}
 		
-		curr = curr->next;
+		scurr = scurr->next;
 	}
 	
 	prev = curr;
@@ -88,7 +87,6 @@ Node* unionLists(Node* destHead, Node* srcHead){
 	
 	Node* newHead = clone(destHead);
 	Node* scurr = srcHead;
-	Node* prev = NULL;
 	
 	while(scurr != NULL){
 		Node* curr = newHead;
@@ -120,7 +118,9 @@ Node* unionLists(Node* destHead, Node* srcHead){
 				}
 				break;
 			}
+			curr = curr->next;
 		}
+		scurr = scurr->next;
 	}
 	
 	return newHead;
@@ -128,7 +128,7 @@ Node* unionLists(Node* destHead, Node* srcHead){
 
 Node *getFiles(hashTable* table, char* word){
 	
-	char* key = tolower(word);
+	char* key = toLower(word);
 	int i = hash(table, key);
 	
 	Bucket* bucket = table->buckets[i];
@@ -202,22 +202,28 @@ int main(int argc, char* argv[]){
 				if(strcmp( fileName, "</list>") == 0){
 					break;
 				}
-				insertIndex(table, word, fileName);
+				insert(table, word, fileName);
 			}
 		}
 	}
+	
+	fclose(fp);
 
-	if(indexer == NULL)
-		break;
-	if(words == NULL)
-		break;
+	if(table == NULL){
+		printf("failed to build table");
+		return -1;
+	}
 	int SEARCH_AND = 0;
 	int SEARCH_OR = 1;
 	int type = -1;
 	
+	char* str = malloc(100 * sizeof(char));
 	scanf(" %[^\n]s",str);
 	char* word = strtok (str," ");
 	while(1){
+		if(strcmp(word,"q") == 0){
+			break;
+		}
 		if(strcmp(word,"sa") == 0)
 			type = 0;
 		else if(strcmp(word,"so") == 0)
@@ -225,31 +231,40 @@ int main(int argc, char* argv[]){
 			
 		if(type < 0){
 			scanf(" %[^\n]s",str);
+			word = strtok (str," ");
 			continue;
 		}
 			
 		Node* resultFiles = NULL;
 		
-		while((word == strtok (NULL, " ")) != NULL)
+		while((word = strtok (NULL, " ")) != NULL){
 			if(type == SEARCH_AND){
-				Node* files = getfiles(indexer, words[i])
-				Node* ret = intersect(resultFiles, files);
+				Node* files = getFiles(table, word);
+				Node* ret = intersectLists(resultFiles, files);
 				rNodeFree(resultFiles);
 				resultFiles = ret;
 			}else if(type == SEARCH_OR){
-				Node* files = getfiles(indexer, words[i])
+				Node* files = getFiles(table, word);
 				Node* ret = unionLists(resultFiles, files);
 				rNodeFree(resultFiles);
 				resultFiles = ret;
 			}
 		}
 		
-		scanf(" %[^\n]s",str);
-		if(strcmp(str,"q") == 0){
-			break;
+		Node* curr = resultFiles;
+		
+		while(curr != NULL){
+			printf("%s, ", curr->fileName);
+			curr = curr->next;
 		}
+		printf("\n");
+		
+		scanf(" %[^\n]s",str);
 		word = strtok (str," ");
 	}
+	
+	deletetable(table);
+	free(str);
 	
 	return 1;
 }
