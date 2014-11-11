@@ -203,6 +203,7 @@ int main(int argc, char* argv[]){
 					break;
 				}
 				insert(table, word, fileName);
+				break;
 			}
 		}
 	}
