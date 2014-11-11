@@ -5,10 +5,6 @@
 #include <ctype.h>
 #include <unistd.h>
 
-int hash(hashTable *table, char *key);
-void insertBucket( Bucket *bucket, char *filename);
-void rBinFree( Bucket *bucket);
-void rNodeFree( Node *data);
 
 void rBinFree( Bucket *bucket){
 		if(bucket == NULL){
@@ -58,7 +54,7 @@ void printTable( hashTable *table, FILE *fp){
 				for( bucket = table->buckets[i]; bucket != NULL; bucket = bucket->next){
 						fprintf(fp,"<list> %s\n", bucket->key);
 						for(node = bucket->value; node != NULL; node = node->next){
-								fprintf(fp,"%s,%d  ", node->fileName, node->occurences);
+								fprintf(fp,"%s %d  ", node->fileName, node->occurences);
 						}
 						fprintf(fp,"\n");
 						fprintf(fp,"</list>\n");
@@ -144,12 +140,13 @@ void sortList(Bucket *bucket){
 
 }
 void insertBucket( Bucket *bucket, char *fileName){
-
+		if(bucket == NULL)
+			return;
 		/* The insert method is trying to add the data in the hashtable array which is called buckets */
 
 		Node *ptr;
 		Node *prev = NULL;
-
+		
 		for(ptr = bucket->value; ptr != NULL; ptr = ptr->next){
 				if(strcmp(ptr->fileName, fileName) == 0){
 						ptr->occurences++;
@@ -166,7 +163,9 @@ void insertBucket( Bucket *bucket, char *fileName){
 				ptr = bucket->value;
 		}
 		ptr->fileName = (char*)malloc((strlen(fileName) + 1) * sizeof(char));
-		strcpy(ptr->fileName, fileName);
+		memset(ptr->fileName, '\0', (strlen(fileName) + 1) * sizeof(char));
+		memcpy(ptr->fileName, fileName, strlen(fileName) + 1);
+		//strcpy(ptr->fileName, fileName);
 		ptr->occurences = 1;
 		ptr->next = NULL;
 }
@@ -210,6 +209,7 @@ void insert( hashTable *table, char* key, char *data){
 				table->buckets[index] = (Bucket*)malloc(sizeof(Bucket));
 				ptr = table->buckets[index];
 		}
+		ptr->value = NULL;
 		insertBucket(ptr, data);
 		ptr->key = (char*)malloc((strlen(key) + 1) * sizeof(char));
 		key = toLower(key);
