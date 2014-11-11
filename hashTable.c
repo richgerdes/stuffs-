@@ -54,7 +54,7 @@ void printTable( hashTable *table, FILE *fp){
 				for( bucket = table->buckets[i]; bucket != NULL; bucket = bucket->next){
 						fprintf(fp,"<list> %s\n", bucket->key);
 						for(node = bucket->value; node != NULL; node = node->next){
-								fprintf(fp,"%s,%d  ", node->fileName, node->occurences);
+								fprintf(fp,"%s %d  ", node->fileName, node->occurences);
 						}
 						fprintf(fp,"\n");
 						fprintf(fp,"</list>\n");
