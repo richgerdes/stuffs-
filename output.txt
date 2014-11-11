@@ -1,18 +1,19 @@
-<list> A
-directory/test.txt,1  directory/test1.txt,1  
+<list> 2
+directory/test1.txt 1 
 </list>
-<list> Baa
-directory/test1.txt,1  
+<list> and
+directory/directory/test3.txt 1 
 </list>
-<list> Boo
-directory/test.txt,1  
+<list> goats
+directory/directory/test3.txt 1 directory/test.txt 1 directory/test1.txt 1 
 </list>
-<list> cat
-directory/test1.txt,1  
+<list> had
+directory/directory/test3.txt 1 directory/test.txt 1 directory/test1.txt 1 
 </list>
-<list> dog
-directory/test.txt,1  
+<list> john
+directory/directory/test3.txt 2 directory/test.txt 1 directory/test1.txt 1 
 </list>
-<list> name
-directory/test.txt,2  directory/test1.txt,1  
+<list> two
+directory/directory/test3.txt 1 directory/test.txt 1 
 </list>
+
