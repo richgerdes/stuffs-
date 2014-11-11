@@ -144,38 +144,6 @@ Node *getFiles(hashTable* table, char* word){
 	
 }
 
-void search(hashTable* table, int type, int count, char* words[]){
-	if(indexer == NULL)
-		return;
-	if(words == NULL)
-		return;
-	if(type < 0)
-		return;
-	int SEARCH_AND = 0;
-	int SEARCH_OR = 1;
-	Node* resultFiles = NULL;
-	
-	if(type == SEARCH_AND){
-		int i = 0;
-		while(i < count){
-			Node* files = getfiles(indexer, words[i])
-			Node* ret = intersect(resultFiles, files);
-			DNode(resultFiles);
-			resultFiles = ret;
-		}
-	}else if(type == SEARCH_OR){
-		int i = 0;
-		while(i < count){
-			Node* files = getfiles(indexer, words[i])
-			Node* ret = unionLists(resultFiles, files);
-			DNode(resultFiles);
-			resultFiles = ret;
-		}
-	}
-	
-	return resultFiles;
-	
-}
 char* readWord( FILE *fp){
 	
 	char* string = (char*)malloc(sizeof(char) *200);
@@ -239,18 +207,49 @@ int main(int argc, char* argv[]){
 		}
 	}
 
+	if(indexer == NULL)
+		break;
+	if(words == NULL)
+		break;
+	int SEARCH_AND = 0;
+	int SEARCH_OR = 1;
+	int type = -1;
 	
+	scanf(" %[^\n]s",str);
+	char* word = strtok (str," ");
 	while(1){
-		//input->string
-		//split string -> type, words, word count
+		if(strcmp(word,"sa") == 0)
+			type = 0;
+		else if(strcmp(word,"so") == 0)
+			type = 1;
+			
+		if(type < 0){
+			scanf(" %[^\n]s",str);
+			continue;
+		}
+			
+		Node* resultFiles = NULL;
 		
-		//search(indexer, type, word) -> files
-		//for each file in files
-		//	print (file);
-	
-		break; //remove this line!
+		while((word == strtok (NULL, " ")) != NULL)
+			if(type == SEARCH_AND){
+				Node* files = getfiles(indexer, words[i])
+				Node* ret = intersect(resultFiles, files);
+				rNodeFree(resultFiles);
+				resultFiles = ret;
+			}else if(type == SEARCH_OR){
+				Node* files = getfiles(indexer, words[i])
+				Node* ret = unionLists(resultFiles, files);
+				rNodeFree(resultFiles);
+				resultFiles = ret;
+			}
+		}
+		
+		scanf(" %[^\n]s",str);
+		if(strcmp(str,"q") == 0){
+			break;
+		}
+		word = strtok (str," ");
 	}
-	
 	
 	return 1;
 }

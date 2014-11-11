@@ -39,7 +39,10 @@ int hash( hashTable *table, char *key);
 void sortList(Bucket *bucket);
 void insertBucket( Bucket *bucket, char *filename);
 void insert( hashTable *table, char* key, char *data);
-
+int hash(hashTable *table, char *key);
+void insertBucket( Bucket *bucket, char *filename);
+void rBinFree( Bucket *bucket);
+void rNodeFree( Node *data);
 
 
 

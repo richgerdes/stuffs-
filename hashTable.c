@@ -5,10 +5,6 @@
 #include <ctype.h>
 #include <unistd.h>
 
-int hash(hashTable *table, char *key);
-void insertBucket( Bucket *bucket, char *filename);
-void rBinFree( Bucket *bucket);
-void rNodeFree( Node *data);
 
 void rBinFree( Bucket *bucket){
 		if(bucket == NULL){
