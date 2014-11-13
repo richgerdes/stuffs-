@@ -23,18 +23,28 @@ Node* clone(Node* head){
 	return new;
 }
 
-Node* intersectLists(Node* destHead, Node* srcHead){
-	if(destHead == NULL)
-		return clone(srcHead);
-	if(srcHead == NULL)
-		return clone(destHead);
+Node* intersectLists(Node* h1, Node* h2){
+	if(h1 == NULL)
+		return clone(h2);
+	if(h2 == NULL)
+		return clone(h1);
 	
 	Node* newHead = NULL;
-	Node* curr = destHead;
-	Node* scurr = srcHead;
-	Node* prev = NULL;
+	Node* c1 = h1;
+	Node* c2 = h2;
 	
-	while(scurr != NULL){
+	while(c1 != NULL){
+		while(c2 != NULL){
+			if(strcmp(c1->fileName, c2->fileName) == 0){
+				Node* n = cloneNode(c1);
+				n->next = newHead;
+				newHead = n;
+			}
+			c2 = c2->next;
+		}
+		c1 = c1->next;
+	}
+/*	while(scurr != NULL){
 		if(strcmp(curr->fileName, scurr->fileName) == 0){
 			if(newHead == NULL){
 				newHead = cloneNode(curr);
@@ -75,20 +85,38 @@ Node* intersectLists(Node* destHead, Node* srcHead){
 		
 		curr = curr->next;
 	}
-
+	*/
 	return newHead;
 }
 
-Node* unionLists(Node* destHead, Node* srcHead){
-	if(destHead == NULL)
-		return clone(srcHead);
-	if(srcHead == NULL)
-		return clone(destHead);
+Node* unionLists(Node* h1, Node* h2){
+	if(h1 == NULL)
+		return clone(h2);
+	if(h2 == NULL)
+		return clone(h1);
 	
-	Node* newHead = clone(destHead);
-	Node* scurr = srcHead;
+	Node* newHead = clone(h1);
+	Node* c1 = h1;
+	Node* c2 = h2;
+	//Node* scurr = srcHead;
+			
+	while(c1 != NULL){
+		while(c2 != NULL){
+			if(strcmp( c1->fileName, c2->fileName) == 0){
+				break;
+			}
+			c2 = c2->next;
+		}
+		if(h1 == NULL){
+			Node* n = cloneNode(c1);
+			n->next = newHead;
+			newHead = n;
+		}
+		c1 = c1->next;
+	}
 	
-	while(scurr != NULL){
+	
+	/*while(scurr != NULL){
 		Node* curr = newHead;
 		while(curr != NULL){
 			if(strcmp(curr->fileName, scurr->fileName) != 0){
@@ -122,7 +150,7 @@ Node* unionLists(Node* destHead, Node* srcHead){
 		}
 		scurr = scurr->next;
 	}
-	
+	*/
 	return newHead;
 }
 
@@ -159,12 +187,12 @@ char* readWord( FILE *fp){
 				i++;
 				a = fgetc(fp);
 			}
-				string[i]= '\0';	
-				return string;
-			}else{
-				a = fgetc(fp);									
-			}
-	}	
+			string[i]= '\0';	
+			return string;
+		}else{
+			a = fgetc(fp);									
+		}
+	}
 	return NULL;
 }
 
@@ -192,18 +220,22 @@ int main(int argc, char* argv[]){
 		if(result == NULL){
 			break;
 		}
+		//printf("r-'%s'\n",result);
 		if(strcmp( result, "<list>") == 0){
 			char* word = readWord(fp);
+			//printf("'%s'\n",word);
 			while(1){
 				char* fileName = readWord(fp);
 				if(fileName == NULL){
+					//printf("<end>\n");
 					break;
 				}
+				//printf("->'%s'\n",fileName);
 				if(strcmp( fileName, "</list>") == 0){
 					break;
 				}
+				readWord(fp);
 				insert(table, word, fileName);
-				break;
 			}
 		}
 	}
